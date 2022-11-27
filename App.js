@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Alert, Modal, Pressable } from 'react-native';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
@@ -16,27 +17,21 @@ export default function App() {
   const [imgHeight, setHeight] = useState(null);
   const [imgWidth, setWidth] = useState(null);
   const [results, setResults] = useState(null);
+  const [pred, setPred] = useState(null);
 
   let cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
-      // MediaLibrary.requestPermissionsAsync();
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
-
 
       setHasCameraPermission(cameraStatus.status === 'granted')
 
       await tf.ready();
 
-      // tf.setBackend('cpu');
-      // tf.setBackend('wasm')
       console.log(tf.getBackend());
-      
+      console.log(tf.ENV.features);
 
-      // // tf.setBackend('rn-webgl');
-      // // console.log(tf.getBackend());
-      // console.log(tf.ENV.features);
       const modelJson = require("./assets/tfjsexport/model.json");
 
       const modelWeights = [
@@ -49,13 +44,12 @@ export default function App() {
       const roiModel = await tf.loadGraphModel(bundleResourceIO(modelJson, modelWeights)).catch((e) => {
         console.log("[LOADING ERROR] info:", e)
       })
-
+      
+      // warm model up
+      //const warmupResult = await roiModel.executeAsync(tf.zeros([1,224,224,3],  tf.int32).toInt());
+      //console.log(warmupResult)
 
       setRoiModel(roiModel);
-
-      // const warmupResult = await roiModel.executeAsync(tf.zeros([1,224,224,3],  tf.int32).toInt());
-      
-      // warmupResult.dispose();
 
       console.log("Models loaded successfully");
     })();
@@ -74,10 +68,7 @@ export default function App() {
         setWidth(image.width);
         setImageUri(image.uri);
 
-        // showResult(image.uri, imgWidth, imgHeight, idCardModel);
-        // MediaLibrary.saveToLibraryAsync(image.uri)
         console.log(image)
-        // imageToTensor(data.uri,setTensorImage)
       } catch (e) {
         console.log(e);
       }
@@ -212,3 +203,5 @@ const styles = StyleSheet.create({
     fontSize: 18
   }
 });
+
+

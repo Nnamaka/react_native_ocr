@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { filterPredictions, getDuplicates, buildDetectedObjects, cropROIs, keepFrontOrBack, detectText } from './predictionHelpers'
 
-const THRESHOLD = 0.1
+const THRESHOLD = 0.02
 
 
 let classDict = {
@@ -83,30 +83,38 @@ export const showResult = async (imageUri, width, height, model, setImageUri) =>
 
   console.log(classes);
   console.log(scores);
-  let detectionObjects = buildDetectedObjects(scores, THRESHOLD, boxes, classes, classDict, size);
+  // tf.print(predictions)
+
+
+  // let detectionObjects = buildDetectedObjects(scores, THRESHOLD, boxes, classes, classDict, size);
 
 
   // console.log(detectionObjects);
 
-  let duplicates = getDuplicates(detectionObjects);
-  let fildteredPredictions = filterPredictions(detectionObjects, duplicates);
-  let processedPredictions = keepFrontOrBack(fildteredPredictions);
+  // let duplicates = getDuplicates(detectionObjects);
+  // let fildteredPredictions = filterPredictions(detectionObjects, duplicates);
+  // let processedPredictions = keepFrontOrBack(fildteredPredictions);
 
-  console.log(processedPredictions);
+  // console.log(processedPredictions);
 
-  let regionBox = await cropROIs(processedPredictions, imageUri);
-  console.log(regionBox);
+  // let regionBox = await cropROIs(processedPredictions, imageUri);
+  // console.log(regionBox);
 
-  let detectedTexts = await detectText(regionBox); 
+  // let detectedTexts = await detectText(regionBox);
 
 
-  console.log(detectedTexts);
+  // console.log(detectedTexts);
   let text = ``;
 
-  processedPredictions.filter(function(value, idx){
-    if (detectedTexts[idx].length)
-      text = text +'\n' + value.label + ':  ' + detectedTexts[idx][0].text + '\n';
-  })
+  // if (detectedTexts[0] == 'bad')
+  //   text = text + 'Bad Capture.\n Position ID properly';
+  // else {
+  //   processedPredictions.filter(function (value, idx) {
+  //     if (detectedTexts[idx].length)
+  //       text = text + '\n' + value.label + ':  ' + detectedTexts[idx][0].text + '\n';
+  //   })
+  // }
+
 
   return text;
 }

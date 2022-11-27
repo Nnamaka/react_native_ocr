@@ -1,5 +1,5 @@
 import * as ImageManipulator from 'expo-image-manipulator';
-import MlkitOcr from 'react-native-mlkit-ocr';
+// import MlkitOcr from 'react-native-mlkit-ocr';
 
 
 export const buildDetectedObjects = (scores, threshold, boxes, classes, classesDir, size) => {
@@ -137,10 +137,10 @@ export const keepFrontOrBack = (theNewData) => {
 }
 
 
-export const cropROIs = async (detectionObjects,imageUri) => {
+export const cropROIs = async (detectionObjects, imageUri) => {
     let regions = []
 
-    for (let i = 0; i < detectionObjects.length; i++){
+    for (let i = 0; i < detectionObjects.length; i++) {
         let x = detectionObjects[i].bbox[0];
         let y = detectionObjects[i].bbox[1];
         let widthh = detectionObjects[i].bbox[2];
@@ -165,10 +165,16 @@ export const detectText = async (selectedRegions) => {
     let text = [];
     let resultFromUri = undefined;
 
-    for(let i = 0; i < selectedRegions.length; i++){
-        resultFromUri = await MlkitOcr.detectFromUri(selectedRegions[i].textRegion.uri);
-        text.push(resultFromUri);
-    }
+    // for (let i = 0; i < selectedRegions.length; i++) {
+    //     try {
+    //         resultFromUri = await MlkitOcr.detectFromUri(selectedRegions[i].textRegion.uri);
+    //         text.push(resultFromUri);
+    //     }
+    //     catch {
+    //         text.push('bad')
+    //     }
+
+    // }
 
     return text;
 }
